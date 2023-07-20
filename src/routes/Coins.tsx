@@ -90,12 +90,11 @@ function Coins() {
 				{coins.map((coin) => (
 					<Coin key={coin.id}>
 						<Link to={{
-								pathname: `/${coin.id}`,
-								state: { name: coin.name}, //다른 화면으로 state를 보내고 있는 것.
+							pathname: `/${coin.id}`,
+							state: { name: coin.name }, //다른 화면으로 state를 보내고 있는 것.
 						}}>
-								<Img src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}
-								/> {/** 질문예정 */}
-								{coin.name} &rarr;
+							<Img src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}></Img>
+							{coin.name} &rarr;
 						</Link>
 					</Coin>
 				))}
