@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Switch, Route, useLocation, useParams } from "react-router";
+import { Switch, Route, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import Chart from "./Chart";
 import Price from "./Price";
+import { Link } from "react-router-dom";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -49,6 +50,30 @@ const OverviewItem = styled.div`
 const Description = styled.p`
   margin: 20px 0px;
 `;
+
+const Tabs = styled.div`
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	margin: 25px 0px;
+	gap: 10px;
+`;
+
+const Tab = styled.span<{ isActive: boolean }>`
+//ㅁ질문: props를 받아온다고 했는데 이게 어디에 있는 정보를 받아온거지?
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: 400;
+	background-color: rgba(0, 0, 0, 0.5);
+	padding: 7px 0px;
+	border-radius: 10px;
+	color: ${props =>
+		props.isActive ? props.theme.accentColor : props.theme.textColor};
+	a {
+		display: block;
+	}
+`;
+
 
 interface RouteParams {
 	coinId: string;
@@ -116,6 +141,10 @@ function Coin() {
 	const { state } = useLocation<RouteState>();
 	const [info, setInfo] = useState<InfoData>();
 	const [priceInfo, setPriceInfo] = useState<PriceData>();
+	const priceMatch = useRouteMatch("/:coinId/price");
+	const chartMatch = useRouteMatch("/:coinId/chart");
+	//routematch에게 우리가 coinId/price라는 URL에 있는지 확인 해달라고 할 것이다.
+
 	useEffect(() => {
 		(async () => {
 			const infoData = await (
@@ -165,6 +194,15 @@ function Coin() {
 							<span>{priceInfo?.max_supply}</span>
 						</OverviewItem>
 					</Overview>
+						<Tabs>
+							<Tab isActive={chartMatch !== null}>
+								<Link to={`/${coinId}/chart`}>Chart</Link>
+							</Tab>
+							<Tab isActive={priceMatch !== null}>
+								<Link to={`/${coinId}/price`}>Price</Link>
+							</Tab>
+						</Tabs>
+
 					<Switch>
 						<Route path={`/${coinId}/price`}>
 							<Price />
@@ -181,12 +219,12 @@ function Coin() {
 export default Coin;
 
 /**
- * Nested router 혹은 nested route는 route안에 있는 또 다른 route 라고 한다.
- * ㄴ 웹사이트에서 탭을 사용 할 때 우릴 많이 도와줄 것이다.
+ * useRouteMatech란? 특정한 URL에 있는지의 여부를 알려주는 것.
+ * 실제로 유저와 소통하는 방법은?
+ * useRouteMatch라고 불리는 hook을 사용한다.
  * 
- * 
- * 
- * 이번강의 내용 요약
- * CSS 컴포넌트는 소스를 가져옴
- * route 안에 route를 만들 수 있다. 
- */
+ * 이번강의 정리
+ * useRouteMatech라는 것을 사용함
+ * ㄴ 특정한 URL에 있는지 여부를 알려주는 hook 이다.
+ * 144번 198번째 줄 확인
+*/
