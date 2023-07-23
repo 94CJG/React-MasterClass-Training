@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { styled } from 'styled-components';
+import { fetchCoins } from "../api";
+import { useQuery } from "react-query";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -55,7 +57,7 @@ const Img = styled.img`
 	margin-right: 10px;
 `;
 
-interface CoinInterface {
+interface ICoin {
 	id: string,
 	name: string,
 	symbol: string,
@@ -66,7 +68,15 @@ interface CoinInterface {
 }
 
 function Coins() {
-	const [coins, setCoins] = useState<CoinInterface[]>([]); // 타입스크립트는 현재 coin이 무엇인지 모른다. 
+	const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins)
+	/**
+	 * useQuery hook은 나의 fetcher 함수를 부른다.
+	 * fetcher함수가 loading중이라면 react query는 그걸 알려줄 것 이다.
+	 * useQuery는 fetcher 함수를 부르고 fetcher함수가 끝나면 react query는 json을 {data} 안에 넣을 것이다.
+	 */
+
+
+	/*const [coins, setCoins] = useState<CoinInterface[]>([]); // 타입스크립트는 현재 coin이 무엇인지 모른다. 
 	//그래서 인터페이스 명을 지정해주고 그 옆에 []을 작성.
 	//map에 대한 에러 오류해결됨.
 	const [loading, setLoading] = useState(true);
@@ -79,15 +89,15 @@ function Coins() {
 			setLoading(false);
 		})();// (() => )()
 	}, []);
-	console.log(coins);
+	//console.log(coins); */
 	return (
 		<Container>
 			<Header>
 				<Title>코인</Title>
 			</Header>
-			{loading ? (<Loader>"Loading..."</Loader>
+			{isLoading ? (<Loader>"Loading..."</Loader>
 			) : (<CoinsList>
-				{coins.map((coin) => (
+				{data?.slice(0, 100).map((coin) => (
 					<Coin key={coin.id}>
 						<Link to={{
 							pathname: `/${coin.id}`,
@@ -104,16 +114,15 @@ function Coins() {
 }
 export default Coins;
 
-/**	
- * ()() 에 대한 설명 필요 
- * Link to를 통해서 웹에 표현 되고, 클릭시 해당 페이지로 넘어가는 로직을 이해를 잘 못함
+/**
+ * react query??
+ * 우리가 우리 스스로 실행하고 있었던 로직들을 축약해준다.
+ * 사용하기 위해서는 첫 단계로 fetcher함수를 만들어야 한다.
+ * fetcher 함수는 꼭 promise를 return 해줘야 한다.
+ * usseQuery() hook은 react query로부터 왔다.
+ * 2개의 argument를 필요로 한다.
+ * ㄴ 첫 번째는 queryKey 이것은 고유식별자를 필요로 한다.
+ * ㄴ 두 번째 argument는 fetcher 함수 이다.
+ * useQuery라는 hook이 fetcher 함수 fetchCoins를 불러온다.
  * 
- * 
- * 보이지 않는 방식으로(비하인드더씬) 데이터를 어떻게 보내는 방법이 있다. (92번쨰줄 설명 주석)
- * 파라미터를 이용하여 URL에게 코인에 대한 정보를 넘기는 방식으로 했다.
- * ㄴ <Link to = {}`/${coin.id}`> 이방법이 아닌
- * state를 사용하여 다른 화면과 소통 할 수 있다.
- * state란 비하인드 더 씬 소통 같은 것 이다.
- * ㄴ	<Link to={{ pathname: `/${coin.id}`, state: { name: coin.name}, //다른 화면으로 state를 보내고 있는 것.}}>
- * 객체를 이용하여 데이터를 전송 할 수 있다.
- */
+*/

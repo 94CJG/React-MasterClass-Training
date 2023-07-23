@@ -144,7 +144,8 @@ function Coin() {
 	const priceMatch = useRouteMatch("/:coinId/price");
 	const chartMatch = useRouteMatch("/:coinId/chart");
 	//routematch에게 우리가 coinId/price라는 URL에 있는지 확인 해달라고 할 것이다.
-
+	//없다면 null값을 반환한다.
+	console.log(priceMatch);
 	useEffect(() => {
 		(async () => {
 			const infoData = await (
@@ -219,12 +220,7 @@ function Coin() {
 export default Coin;
 
 /**
- * useRouteMatech란? 특정한 URL에 있는지의 여부를 알려주는 것.
- * 실제로 유저와 소통하는 방법은?
- * useRouteMatch라고 불리는 hook을 사용한다.
- * 
- * 이번강의 정리
- * useRouteMatech라는 것을 사용함
- * ㄴ 특정한 URL에 있는지 여부를 알려주는 hook 이다.
- * 144번 198번째 줄 확인
+ * react query??
+ * 우리가 우리 스스로 실행하고 있었던 로직들을 축약해준다.
+ * 사용하기 위해서는 첫 단계로 fetcher함수를 만들어야 한다.
 */
