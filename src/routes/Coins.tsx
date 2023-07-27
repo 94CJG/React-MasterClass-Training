@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+//import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { styled } from 'styled-components';
 import { fetchCoins } from "../api";
@@ -68,14 +68,8 @@ interface ICoin {
 }
 
 function Coins() {
-	const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins)
-	/**
-	 * useQuery hook은 나의 fetcher 함수를 부른다.
-	 * fetcher함수가 loading중이라면 react query는 그걸 알려줄 것 이다.
-	 * useQuery는 fetcher 함수를 부르고 fetcher함수가 끝나면 react query는 json을 {data} 안에 넣을 것이다.
-	 */
-
-
+	const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+	//console.log(isLoading, data);
 	/*const [coins, setCoins] = useState<CoinInterface[]>([]); // 타입스크립트는 현재 coin이 무엇인지 모른다. 
 	//그래서 인터페이스 명을 지정해주고 그 옆에 []을 작성.
 	//map에 대한 에러 오류해결됨.
@@ -114,15 +108,6 @@ function Coins() {
 }
 export default Coins;
 
-/**
- * react query??
- * 우리가 우리 스스로 실행하고 있었던 로직들을 축약해준다.
- * 사용하기 위해서는 첫 단계로 fetcher함수를 만들어야 한다.
- * fetcher 함수는 꼭 promise를 return 해줘야 한다.
- * usseQuery() hook은 react query로부터 왔다.
- * 2개의 argument를 필요로 한다.
- * ㄴ 첫 번째는 queryKey 이것은 고유식별자를 필요로 한다.
- * ㄴ 두 번째 argument는 fetcher 함수 이다.
- * useQuery라는 hook이 fetcher 함수 fetchCoins를 불러온다.
+/** 
  * 
 */

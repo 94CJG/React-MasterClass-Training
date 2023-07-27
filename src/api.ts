@@ -1,7 +1,17 @@
+const BASE_URL = `https://api.coinpaprika.com/v1`
+
 export function fetchCoins() {
-	return fetch("https://api.coinpaprika.com/v1/coins").then(response => response.json()
-	);
+	return fetch(`${BASE_URL}/coins`).then((response) => response.json());
 }
+
+export function fetchCoinInfo(coinId: string){
+	return fetch(`${BASE_URL}/coins/${coinId}`).then((response) => response.json());
+}
+
+export function fetchCoinTickers(coinId: string){
+	return fetch(`${BASE_URL}/tickers/${coinId}`).then((response) => response.json());
+}
+
 
 /**
  * 사용하기 위해서는 첫 단계로 fetcher함수를 만들어야 한다.
