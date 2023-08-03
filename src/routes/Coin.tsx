@@ -224,8 +224,19 @@ function Coin() {
 }
 export default Coin;
 
-/**
- * react query??
- * 우리가 우리 스스로 실행하고 있었던 로직들을 축약해준다.
- * 사용하기 위해서는 첫 단계로 fetcher함수를 만들어야 한다.
+/** Reacap 복습해야함 - 마지막 날짜 07.27.목
+ * 첫 번째로 react query는 fetcher함수를 만들 수 있게 해준다.
+ * const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+ * ㄴ isLoading 같은 함수가 불렸는지 아닌지를 우리에게 알려준다.
+ * ㄴ 데이터를 불러와서 ture -> false로 변경 됐을때 함수가 끝난다
+ * ㄴ 함수가 끝났을 때 결과 값을 data에 넣어준다.
+ * 
+ * react query는 Caching(캐싱) 매커니즘을 갖고 있다.
+ * ㄴ 유저에게 Loading을 다시 보여주지 말라고 알게 된다.
+ * ㄴ 이미 캐시에 어떠한 데이터가 있다는 것을 알고 있다.
+ * 
+ * react query는 자체적인 개발자도구가 존재하며, 설치 할 수있다.
+ * ㄴ const {isLoading: infoLoading, data: infoData} = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId));
+ * ㄴ () => fetchCoinInfo(coinId) 
+ * 
 */
