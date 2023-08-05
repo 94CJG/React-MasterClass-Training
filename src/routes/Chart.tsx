@@ -4,7 +4,7 @@ import ApexChart from "react-apexcharts";
 
 interface IHistorical {
 	time_open: string;
-	time_close: string;
+	time_close: number;
 	open: number;
 	high: number;
 	low: number;
@@ -27,10 +27,6 @@ function Chart({ coinId }: ChartProps) { //props 넘겨주는게 헷갈린다.
 					type="line"
 					series={[
 						{
-							name: "hello",
-							data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-						},
-						{
 							name: "price",
 							data: data?.map((price) => parseFloat(price.close)) ?? []
 						},
@@ -40,7 +36,7 @@ function Chart({ coinId }: ChartProps) { //props 넘겨주는게 헷갈린다.
 							mode: "dark"
 						},
 						chart: {
-							height: 500,
+							height: 300,
 							width: 500,
 							toolbar: {
 								show: false,
@@ -59,6 +55,19 @@ function Chart({ coinId }: ChartProps) { //props 넘겨주는게 헷갈린다.
 							axisBorder: { show: false },
 							axisTicks: { show: false },
 							labels: { show: false },
+							type: "datetime",
+							categories: data?.map((price) => new Date(price.time_close * 1000).toISOString()
+							),
+						},
+						fill: {
+							type: "gradient",
+							gradient: { gradientToColors: ["#0be881"], stops: [0, 100] },
+						},
+						colors: ["blue"],
+						tooltip: {
+							y: {
+								formatter: (value) => `$${value.toFixed(2)}`,
+							}
 						}
 					}} />}
 		</div>
