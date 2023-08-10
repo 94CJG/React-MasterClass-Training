@@ -91,11 +91,12 @@ function Coins() {
 			</Header>
 			{isLoading ? (<Loader>"Loading..."</Loader>
 			) : (<CoinsList>
-				{data?.slice(0, 100).map((coin) => (
+					{data?.slice(0, 30).map((coin) => (
 					<Coin key={coin.id}>
 						<Link to={{
 							pathname: `/${coin.id}`,
-							state: { name: coin.name }, //다른 화면으로 state를 보내고 있는 것.
+							state: { name: coin.name },
+							 //다른 화면으로 state를 보내고 있는 것.
 						}}>
 							<Img src={`https://cryptocurrencyliveprices.com/img/${coin.id}.png`}></Img>
 							{coin.name} &rarr;

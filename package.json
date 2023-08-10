@@ -48,5 +48,5 @@
   "devDependencies": {
     "@types/react-router-dom": "^5.3.3"
   },
-  "proxy": "http://localhost:3000"
+  "proxy": "https://api.coinpaprika.com/v1/coins"
 }

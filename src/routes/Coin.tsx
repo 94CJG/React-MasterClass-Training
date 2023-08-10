@@ -61,7 +61,7 @@ const Tabs = styled.div`
 	gap: 10px;
 `;
 
-const Tab = styled.span<{ isactive: boolean }>`
+const Tab = styled.span<{ $isactive: boolean }>`
 	text-align: center;
 	text-transform: uppercase;
 	font-size: 12px;
@@ -70,7 +70,7 @@ const Tab = styled.span<{ isactive: boolean }>`
 	padding: 7px 0px;
 	border-radius: 10px;
 	color: ${props =>
-		props.isactive ? props.theme.accentColor : props.theme.textColor};
+	props.$isactive ? props.theme.accentColor : props.theme.textColor};
 	a {
 		display: block;
 	}
@@ -143,9 +143,20 @@ function Coin() {
 	const priceMatch = useRouteMatch("/:coinId/price");
 	const chartMatch = useRouteMatch("/:coinId/chart");
 	const {isLoading: infoLoading, data: infoData} = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId));
-	const {isLoading: tickersLoading, data: tickersData} = useQuery<PriceData>(["tickers", coinId], () => fetchCoinTickers(coinId));
-	//routematch에게 우리가 coinId/price라는 URL에 있는지 확인 해달라고 할 것이다.
-	//없다면 null값을 반환한다.
+	const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(["tickers", coinId],
+		() => fetchCoinTickers(coinId),
+		{
+			//refetchInterval: 3.6e+6,
+			//useQuery hook의 3번째 argument를 쓸 수 있는 방법.
+			//리액트 쿼리를 통하여 변환 확인 가능. 현재 1시간으로 해두었다. 08-06-20:23 -> 29097.323
+			//공부 끝났을 때 변경해두기. 
+		}
+	);
+	/**
+	 *
+	 */
+	/*routematch에게 우리가 coinId/price라는 URL에 있는지 확인 해달라고 할 것이다.
+	없다면 null값을 반환한다.*/
 	//console.log(priceMatch);
 	/*const [loading, setLoading] = useState(true);
 	const [info, setInfo] = useState<InfoData>();
@@ -185,8 +196,8 @@ function Coin() {
 							<span>${infoData?.symbol}</span>
 						</OverviewItem>
 						<OverviewItem>
-							<span>Open Source:</span>
-							<span>{infoData?.open_source ? "Yes" : "No"}</span>
+								<span>Price:</span>
+								<span>{tickersData?.quotes.USD.price.toFixed(3)}</span>
 						</OverviewItem>
 					</Overview>
 					<Description>{infoData?.description}</Description>
@@ -201,17 +212,17 @@ function Coin() {
 						</OverviewItem>
 					</Overview>
 						<Tabs>
-							<Tab isactive={chartMatch !== null ? true : false}>
+							<Tab $isactive={chartMatch !== null ? true : false}>
 								<Link to={`/${coinId}/chart`}>Chart</Link>
 							</Tab>
-							<Tab isactive={priceMatch !== null ? true : false}>
+							<Tab $isactive={priceMatch !== null ? true : false}>
 								<Link to={`/${coinId}/price`}>Price</Link>
 							</Tab>
 						</Tabs>
 
 					<Switch>
 						<Route path={`/${coinId}/price`}>
-							<Price />
+							<Price coinId={coinId}/>
 						</Route>
 						<Route path={`/${coinId}/chart`}>
 							<Chart coinId={coinId} />
@@ -224,19 +235,25 @@ function Coin() {
 }
 export default Coin;
 
-/** Reacap 복습해야함 - 마지막 날짜 07.27.목
- * 첫 번째로 react query는 fetcher함수를 만들 수 있게 해준다.
- * const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
- * ㄴ isLoading 같은 함수가 불렸는지 아닌지를 우리에게 알려준다.
- * ㄴ 데이터를 불러와서 ture -> false로 변경 됐을때 함수가 끝난다
- * ㄴ 함수가 끝났을 때 결과 값을 data에 넣어준다.
+/** Cors 문제와 received `true`for a non-boolean attribute 문제
+ * ㅁ Cors 오류
+ * - 오류문구: Access to fetch at 'http://localhost:3001/test' from orgin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response servers your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
  * 
- * react query는 Caching(캐싱) 매커니즘을 갖고 있다.
- * ㄴ 유저에게 Loading을 다시 보여주지 말라고 알게 된다.
- * ㄴ 이미 캐시에 어떠한 데이터가 있다는 것을 알고 있다.
+ * 상황: 강의에서 사용하던 API가 유료화가 됐고, main에 나오는 값들은 정상작동 하고 있으나, 코인의 가격들을 볼수가 없어서, 니코쌤이 만드신 API로 대체함.
  * 
- * react query는 자체적인 개발자도구가 존재하며, 설치 할 수있다.
- * ㄴ const {isLoading: infoLoading, data: infoData} = useQuery<InfoData>(["info", coinId], () => fetchCoinInfo(coinId));
- * ㄴ () => fetchCoinInfo(coinId) 
+ * 문제: API요청 출처가 두개이상이면 발생하는 오류 발생
  * 
+ * 해결: 정확한 원인은 모르나 package.json 안에 "proxy": "http://localhost:3000" 내용추가
+ * 
+ * ㅁ received `true`for a non-boolean attribute 오류
+ * - 오류문구: Waring: Received `false` for a none-boolean attribute `primary`
+ * 
+ * 상황: 강의에 클론코딩을 하면서 진행중 에러가 발생
+ * 
+ * 문제: 64번째줄의 props 문제로 발견 되었다.
+ *  - Tebs의 부모 스타일 컴포넌트에서 Tab 아들 컴포넌트에게 props를 전달하려 하였으나, 에러발생함.
+ *  - 원인은 HTML의 Attributes로 DOM을 조작하기를 희망하는 것인지 StyleComponets의 props로 주려는 것인지 정확히 구별을 해줘야 에러 발생이 안된다.
+ *
+ * 해결: StyleComponets에서 props로 넘겨주려는 프로퍼티 앞에
+ 	 $를 붙여줘서 구별을 해주면 해결됨. 
 */
