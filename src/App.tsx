@@ -1,6 +1,8 @@
-import { createGlobalStyle } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { darkTheme, lightTheme } from "./theme";
+import { useState } from "react";
 
 
 const GlobalStyle = createGlobalStyle` //오브젝트를 전역 스코프에 CSS값 적용한다.
@@ -65,17 +67,27 @@ const GlobalStyle = createGlobalStyle` //오브젝트를 전역 스코프에 CSS
 `;
 
 function App() {
+  const [isDark, setIsDark] = useState(false);
+  const toggleDark = () => setIsDark(current => !current);
   return (
     <>
-      <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools initialIsOpen={true} />
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <button onClick={toggleDark}>Toggle Mode</button>
+        <GlobalStyle />
+        <Router />
+        <ReactQueryDevtools initialIsOpen={true} />
+      </ThemeProvider>{" "}
     </>
   );
 }
 
 export default App;
 /**
- * <> :  Fragment 라고 부르며, 일종의 유령 컴포넌트이다.
- * ㄴ 부모 없이 서로 붙어 있는 많은 것들을 리턴할 수 있게 해준다.
+ * ThemeProvider를 index에서 App으로 옮겼다.
+ * ㄴ 이유는 useState hook을 사용하기 위해서이다.
+ * 
+ * 복습 - 230813
+ * ThemeProvider와 theme을 index에서 App으로 가져옴
+ * theme을 바꾸고 싶었는데, useState hook에 기반하여 바꾸려고 했던 것 이다.
+ * 
 */

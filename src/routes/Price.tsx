@@ -1,29 +1,11 @@
-import { useQuery } from "react-query";
-import { fetchCoinHistory } from "../api";
-
-interface IHistorical {
-	time_open: string;
-	time_close: number;
-	open: number;
-	high: number;
-	low: number;
-	close: number;
-	volume: number;
-	market_cap: number;
-}
-
-interface PriceProps {
+interface ChartProps {
 	coinId: string;
 }
 
-function Price({ coinId }: PriceProps) {
-	// const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId))
+function Price({ coinId }: ChartProps) {
 	return (
 		<div>
-			<h1>Hello</h1>
-			{/* {isLoading ? "Loading price" :
-				
-			} */}
+
 		</div>
 	)
 }
