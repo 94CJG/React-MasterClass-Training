@@ -2,6 +2,8 @@ import { useQuery } from "react-query";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
 import { Link, Route } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 interface IHistorical {
 	time_open: string;
@@ -16,18 +18,12 @@ interface IHistorical {
 
 interface ChartProps {
 	coinId: string;
-	isDark:boolean;
 }
 
-function Chart({ coinId, isDark }: ChartProps) { //props 넘겨주는게 헷갈린다.
+function Chart({ coinId }: ChartProps) { 
+	const isDark =  useRecoilValue(isDarkAtom);
 	const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId));
-	//console.log(data?.map((price) => price.high));
 	return (
-		//ApexChart문제점 
-		/**
-		 * map을 사용시 처음 함수로 불러오려고 했던 것은 타입스크립트로 인한 문자열 이였다, 그래서 코드상 parseFloat을 사용했기 때문에
-		 * 함수 적용시 안되는 것 ! 그래서 number인 형태를 가져와서 진행 해봤더니 성공 하였다!!
-		 */
 		<div>
 			{isLoading ? "Loading chart..." :
 				<ApexChart
@@ -43,7 +39,7 @@ function Chart({ coinId, isDark }: ChartProps) { //props 넘겨주는게 헷갈�
 					]}
 					options={{
 						theme: {
-							mode: isDark ? "dark" : "light",
+							mode: "light"
 						},
 						chart: {
 							height: 300,

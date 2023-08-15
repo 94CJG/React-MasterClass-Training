@@ -137,11 +137,9 @@ interface PriceData {
 	};
 }
 
-interface ICoinProps {
-	isDark: boolean;
-}
+interface ICoinProps {}
 
-function Coin({ isDark }: ICoinProps) {
+function Coin() {
 	const { coinId } = useParams<RouteParams>();
 	const { state } = useLocation<RouteState>();
 	const priceMatch = useRouteMatch("/:coinId/price");
@@ -156,28 +154,6 @@ function Coin({ isDark }: ICoinProps) {
 			//공부 끝났을 때 변경해두기. 
 		}
 	);
-	/**
-	 *
-	 */
-	/*routematch에게 우리가 coinId/price라는 URL에 있는지 확인 해달라고 할 것이다.
-	없다면 null값을 반환한다.*/
-	//console.log(priceMatch);
-	/*const [loading, setLoading] = useState(true);
-	const [info, setInfo] = useState<InfoData>();
-	const [priceInfo, setPriceInfo] = useState<PriceData>();
-	useEffect(() => {
-		(async () => {
-			const infoData = await (
-				await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-			).json();
-			const priceData = await (
-				await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-			).json();
-			setInfo(infoData);
-			setPriceInfo(priceData);
-			setLoading(false);
-		})();
-	}, [coinId]);*/
 	const loading = infoLoading || tickersLoading
 	return (
 		<Container>
@@ -229,7 +205,7 @@ function Coin({ isDark }: ICoinProps) {
 							<Price coinId={coinId}/>
 						</Route>
 						<Route path={`/${coinId}/chart`}>
-							<Chart isDark={isDark} coinId={coinId} />
+							<Chart coinId={coinId} />
 						</Route>
 					</Switch>
 				</>
@@ -238,26 +214,3 @@ function Coin({ isDark }: ICoinProps) {
 	);
 }
 export default Coin;
-
-/** Cors 문제와 received `true`for a non-boolean attribute 문제
- * ㅁ Cors 오류
- * - 오류문구: Access to fetch at 'http://localhost:3001/test' from orgin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response servers your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
- * 
- * 상황: 강의에서 사용하던 API가 유료화가 됐고, main에 나오는 값들은 정상작동 하고 있으나, 코인의 가격들을 볼수가 없어서, 니코쌤이 만드신 API로 대체함.
- * 
- * 문제: API요청 출처가 두개이상이면 발생하는 오류 발생
- * 
- * 해결: 정확한 원인은 모르나 package.json 안에 "proxy": "http://localhost:3000" 내용추가
- * 
- * ㅁ received `true`for a non-boolean attribute 오류
- * - 오류문구: Waring: Received `false` for a none-boolean attribute `primary`
- * 
- * 상황: 강의에 클론코딩을 하면서 진행중 에러가 발생
- * 
- * 문제: 64번째줄의 props 문제로 발견 되었다.
- *  - Tebs의 부모 스타일 컴포넌트에서 Tab 아들 컴포넌트에게 props를 전달하려 하였으나, 에러발생함.
- *  - 원인은 HTML의 Attributes로 DOM을 조작하기를 희망하는 것인지 StyleComponets의 props로 주려는 것인지 정확히 구별을 해줘야 에러 발생이 안된다.
- *
- * 해결: StyleComponets에서 props로 넘겨주려는 프로퍼티 앞에
- 	 $를 붙여줘서 구별을 해주면 해결됨. 
-*/

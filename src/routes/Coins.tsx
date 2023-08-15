@@ -68,32 +68,12 @@ interface ICoin {
 	type: string,
 }
 
-interface ICoinsProps {
-	toggleDark: () => void;
-}
-
-function Coins({toggleDark} : ICoinsProps) {
+function Coins() {
 	const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
-	//console.log(isLoading, data);
-	/*const [coins, setCoins] = useState<CoinInterface[]>([]); // 타입스크립트는 현재 coin이 무엇인지 모른다. 
-	//그래서 인터페이스 명을 지정해주고 그 옆에 []을 작성.
-	//map에 대한 에러 오류해결됨.
-	const [loading, setLoading] = useState(true);
-
-	useEffect(() => {
-		(async () => {
-			const response = await fetch("https://api.coinpaprika.com/v1/coins");
-			const json = await response.json();
-			setCoins(json.slice(0, 100)); //slice함수를 사용하여 0 ~ 100까지 기준으로 잘라준다.
-			setLoading(false);
-		})();// (() => )()
-	}, []);
-	//console.log(coins); */
 	return (
 		<Container>
 			<Header>
 				<Title>코인</Title>
-				<button>Toggle Dark Mode</button>
 			</Header>
 			{isLoading ? (<Loader>"Loading..."</Loader>
 			) : (<CoinsList>
