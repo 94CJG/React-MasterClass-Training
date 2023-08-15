@@ -16,9 +16,10 @@ interface IHistorical {
 
 interface ChartProps {
 	coinId: string;
+	isDark:boolean;
 }
 
-function Chart({ coinId }: ChartProps) { //props 넘겨주는게 헷갈린다.
+function Chart({ coinId, isDark }: ChartProps) { //props 넘겨주는게 헷갈린다.
 	const { isLoading, data } = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId));
 	//console.log(data?.map((price) => price.high));
 	return (
@@ -42,7 +43,7 @@ function Chart({ coinId }: ChartProps) { //props 넘겨주는게 헷갈린다.
 					]}
 					options={{
 						theme: {
-							mode: "dark"
+							mode: isDark ? "dark" : "light",
 						},
 						chart: {
 							height: 300,

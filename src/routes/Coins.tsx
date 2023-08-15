@@ -31,6 +31,7 @@ const Coin = styled.li`
   padding: 20px; 
   border-radius: 15px;
   margin-bottom: 10px;
+	border: 1px solid red;
 	a {
 		display: flex;
 		align-items: center;
@@ -67,7 +68,11 @@ interface ICoin {
 	type: string,
 }
 
-function Coins() {
+interface ICoinsProps {
+	toggleDark: () => void;
+}
+
+function Coins({toggleDark} : ICoinsProps) {
 	const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 	//console.log(isLoading, data);
 	/*const [coins, setCoins] = useState<CoinInterface[]>([]); // 타입스크립트는 현재 coin이 무엇인지 모른다. 
@@ -88,6 +93,7 @@ function Coins() {
 		<Container>
 			<Header>
 				<Title>코인</Title>
+				<button>Toggle Dark Mode</button>
 			</Header>
 			{isLoading ? (<Loader>"Loading..."</Loader>
 			) : (<CoinsList>

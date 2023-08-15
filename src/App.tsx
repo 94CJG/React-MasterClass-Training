@@ -68,26 +68,29 @@ const GlobalStyle = createGlobalStyle` //오브젝트를 전역 스코프에 CSS
 
 function App() {
   const [isDark, setIsDark] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const toggleDark = () => setIsDark(current => !current);
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <button onClick={toggleDark}>Toggle Mode</button>
         <GlobalStyle />
-        <Router />
+        <Router  isDark={isDark} toggleDark={toggleDark} />
         <ReactQueryDevtools initialIsOpen={true} />
       </ThemeProvider>{" "}
     </>
   );
 }
-
 export default App;
-/**
- * ThemeProvider를 index에서 App으로 옮겼다.
- * ㄴ 이유는 useState hook을 사용하기 위해서이다.
- * 
- * 복습 - 230813
- * ThemeProvider와 theme을 index에서 App으로 가져옴
- * theme을 바꾸고 싶었는데, useState hook에 기반하여 바꾸려고 했던 것 이다.
- * 
+/** 
+ * App (isDark, modifierFn)
+
+-> Router -> Coins (modifier)
+-> Router -> Coin -> Chart (isDark)
+global state는 어플리케이션이 무언가를 인지해야 할 때 사용.
+global state는 어플리케이션이 특정 value에 접근해야 할 때 사용.
+ㄴ component가 어디에 있던지, 누가 접근하고자 하는지에 상관없이!
+
+isDark: App -> Router -> Coin -> Chart
+
+Header -> (isDark) <- Chart
 */
