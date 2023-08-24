@@ -6,7 +6,7 @@ interface IRouterProps {
 
 }
 
-function Router({}:IRouterProps) {
+function Router() {
 	return( 
 	<BrowserRouter>
 		<Switch>

@@ -81,16 +81,8 @@ function App() {
   );
 }
 export default App;
-/** 
- * App (isDark, modifierFn)
-
--> Router -> Coins (modifier)
--> Router -> Coin -> Chart (isDark)
-global state는 어플리케이션이 무언가를 인지해야 할 때 사용.
-global state는 어플리케이션이 특정 value에 접근해야 할 때 사용.
-ㄴ component가 어디에 있던지, 누가 접근하고자 하는지에 상관없이!
-
-isDark: App -> Router -> Coin -> Chart
-
-Header -> (isDark) <- Chart
-*/
+/**
+ * const isDark =  useRecoilValue(isDarkAtom) 한 컴포넌트가 atom의 value를 감지하고 있는 중이다.
+ * useState와 비슷한 경향이 보여진다.
+ * 
+ */

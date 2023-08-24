@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { styled } from 'styled-components';
 import { fetchCoins } from "../api";
 import { useQuery } from "react-query";
+import { isDarkAtom } from "../atoms";
+import { useSetRecoilState } from "recoil";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -26,12 +28,13 @@ const Header = styled.header`
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: white;
+  background-color: ${(props) => props.theme.bgColor};
   color: ${(props) => props.theme.textColor};
   padding: 20px; 
   border-radius: 15px;
   margin-bottom: 10px;
 	border: 1px solid red;
+	border: ${(props) => props.theme.border};
 	a {
 		display: flex;
 		align-items: center;
@@ -69,11 +72,14 @@ interface ICoin {
 }
 
 function Coins() {
+	const setDarkAtom = useSetRecoilState(isDarkAtom); //setterFn변수는 value를 설정(set)하는 function이다. 매우 중요
+	const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
 	const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 	return (
 		<Container>
 			<Header>
 				<Title>코인</Title>
+				<button onClick={toggleDarkAtom}>Toggle Mode</button> {/*atom을 이용하여 배경모드 변경*/}
 			</Header>
 			{isLoading ? (<Loader>"Loading..."</Loader>
 			) : (<CoinsList>

@@ -84,5 +84,3 @@ function Chart({ coinId }: ChartProps) {
 
 export default Chart;
 
-// time_open: string; 부분을 맵을 통해서 날짜로 변환을 한 다음 보여주는 형식으로 한다.
-// data 형식 타입스크립트에
