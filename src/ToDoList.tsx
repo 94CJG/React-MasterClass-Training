@@ -29,26 +29,60 @@ import { useForm } from "react-hook-form";
 	);
 }*/
 
+interface IForm {
+	email: string;
+	firstName: string;
+	lsatName: string;
+	username: string;
+	password: string;
+	password1: string;
+}
+
 function ToDoList() {
-	const { register, handleSubmit, formState } = useForm();
+	const { register, handleSubmit, formState:{errors} } = useForm<IForm>({
+		defaultValues: {
+			email: "@naver.com",
+		}, 
+	});
 	const onValid = (data: any) => {
 		console.log(data);
 	};
-	console.log(register("todo"));
-	console.log(formState.errors);
+	console.log(errors);
 	return (
 		<div>
 			<h1>ToDo-List Start</h1>
-			<form style={{display:"flex", flexDirection:"column"}} onSubmit={handleSubmit(onValid)}> {/** 12 ~ 18번째 줄 대체 */}
-				<input {...register("email", { required: true })} placeholder="Email" />
-				<input {...register("firstName", { required: true })} placeholder="First Name" />
-				<input {...register("lsatName", { required: true })} placeholder="Last Name" />
-				<input {...register("username", { required: true, minLength: 10 })} placeholder="User Name" />
-				<input {...register("password", { required: true, minLength: 5 })} placeholder="PasswWord" />
-				<input {...register("password1", { required: "Passwird is required", minLength: {
-					value: 5,
-					message: "Your password is too short."
-				}})} placeholder="PassWord1" />
+			<form style={{ display: "flex", flexDirection: "column" }} onSubmit={handleSubmit(onValid)}> {/** 12 ~ 18번째 줄 대체 */}
+				<input {...register("email", {
+					required: "Email is required",
+					pattern: {
+						value: /^[A-Za-z0-9._%+-]+@naver.com$/,
+						message: "Only naver.com emails allowed",
+					},
+				})} 
+				placeholder="Email"
+				/>
+				<span>{errors?.email?.message}</span> {/* 오류발생함. 원인: 타입스크립트 선언을 안해서 발생하는 문제  */}
+
+				<input {...register("firstName", { required: "write here" })} placeholder="first Name" />
+				<span>{errors?.firstName?.message}</span>
+
+				<input {...register("lsatName", { required: "write here" })} placeholder="last Name" />
+				<span>{errors?.lsatName?.message}</span> 
+				
+				<input {...register("username", { required: "write here", minLength: 10 })} placeholder="user Name" />
+				<span>{errors?.username?.message}</span>
+				
+				<input {...register("password", { required: "write here", minLength: 5 })} placeholder="passwWord" />
+				<span>{errors?.password?.message}</span>
+
+				<input {...register("password1", {
+						required: "Passwird is required",
+						minLength: {
+						value: 5,
+						message: "Your password is too short."
+					}
+				})} placeholder="PassWord1" />
+				<span>{errors?.password1?.message}</span> 
 				<button>Add</button>
 			</form>
 		</div>
@@ -58,11 +92,20 @@ function ToDoList() {
 export default ToDoList;
 
 /**
- * useForm( )에 대한 강의
- * handleSubmit && formState를 사용하여 form에 대한 유효성 검사와 자동으로 에러 처리해주는 모습과 옵션들을 수강함.
- * handleSubmit( arg1, arg2 )은 2개의 인자값을 필요로 한다. 첫 번째 인자값은 필수이며, 두 번째 부터는 필수가 아니다.
- * 오류에 대한 처리가 가능하다. ( 필수, 최소길이, 메세지 입력 등.. )
- * required를 자바스크립트로 넣은 이유는? 
- * -> 악의로 이용하여 개발자 도구로 HTML에 작성시 지워서 사용 할 수 있기 때문이다.
+ * #6.8 Form Errors
+
+ * ㅁ 정규식 표현을 사용하여 유효성 검사를 편리하게 할 수 있다.
+ * -> ^ 문장의 시작
+ * -> + 하나 또는 하나이상
+ * -> ^[A-Za-z0-9._%+-]+@naver.com$ 
+ * -> 기호와 숫자: A ~ Z, a ~ z, 0 ~ 9,
+ * -> 특수문자:  . , _ , %, +, -
+ * -> @naver.com 문자열로 일치 해야함.
+ * 
+ * ㅁ React Hook Form은 TypeScript로 빌드 되었으며, FormData 유형을 정의하여 값을 지원 가능하다.
+ * ㅁ const { register, handleSubmit, formState:{errors} } = useForm<IForm>({
+		defaultValues: { email: "@naver.com" }}
+		-> defaultValues 사용자와 상호작용 하기 전 input값에서 먼저 보여준다.
+		-> defaultValues 값을 설정 할 때 null 또는 " " 빈 문자열로 정의 하지 않는게 좋다.
  * 
  */
